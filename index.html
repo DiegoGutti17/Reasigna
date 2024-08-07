@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Procesador de Órdenes</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        textarea {
+            width: 100%;
+            height: 150px;
+        }
+        #resultado {
+            margin-top: 20px;
+            white-space: pre-wrap;
+            border: 1px solid #ccc;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Procesador de Órdenes</h1>
+    <textarea id="inputOrden" placeholder="Introduce la orden aquí..."></textarea>
+    <br>
+    <button onclick="procesarOrden()">Procesar Orden</button>
+    <button onclick="copiarResultado()">Copiar Resultado</button>
+    <button onclick="borrarContenido()">Borrar Contenido</button>
+    <div id="resultado"></div>
+
+    <script>
+        function procesarOrden() {
+            let orden = document.getElementById('inputOrden').value.toUpperCase();
+            let lineas = orden.split('\n');
+            let resultado = [];
+            let temp = "";
+
+            for (let linea of lineas) {
+                // Eliminar espacios adicionales alrededor de los dos puntos
+                linea = linea.replace(/\s*:\s*/, ':').trim();
+
+                if (linea.includes("NODO:") || linea.includes("DIVICAU:") || linea.includes("DIVISOR:") || linea.includes("CTO:")) {
+                    temp += linea.split(":")[1].trim();
+                } else {
+                    if (temp) {
+                        resultado.push(temp);
+                        temp = "";
+                    }
+                    resultado.push(linea);
+                }
+            }
+
+            if (temp) {
+                resultado.push(temp);
+            }
+
+            let resultadoFinal = resultado.join('\n');
+            document.getElementById('resultado').textContent = resultadoFinal;
+        }
+
+        function copiarResultado() {
+            let resultado = document.getElementById('resultado').textContent;
+            navigator.clipboard.writeText(resultado).then(() => {
+                alert('Resultado copiado al portapapeles');
+            }).catch(err => {
+                console.error('Error al copiar al portapapeles: ', err);
+            });
+        }
+
+        function borrarContenido() {
+            document.getElementById('inputOrden').value = '';
+            document.getElementById('resultado').textContent = '';
+        }
+
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
