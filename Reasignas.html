@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de CTO</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .container {
+            margin-top: 20px;
+        }
+        .form-label {
+            font-weight: bold;
+        }
+        .buttons {
+            margin-top: 20px;
+        }
+        #resultado {
+            white-space: pre-wrap; /* Asegura que el texto tenga formato con saltos de línea */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center">Gestión de CTO</h1>
+        <form id="ctoForm">
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <label for="gestor" class="form-label">Gestor</label>
+                    <input type="text" id="gestor" class="form-control" placeholder="Nombre del gestor">
+                </div>
+                <div class="col-md-4">
+                    <label for="orden" class="form-label">Número de Orden</label>
+                    <input type="text" id="orden" class="form-control" placeholder="Orden">
+                </div>
+                <div class="col-md-4">
+                    <label for="lineid" class="form-label">Line ID</label>
+                    <input type="text" id="lineid" class="form-control" placeholder="Line ID">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <label for="ctoInicial" class="form-label">CTO Inicial</label>
+                    <input type="text" id="ctoInicial" class="form-control" placeholder="CTO Inicial">
+                </div>
+                <div class="col-md-4">
+                    <label for="ctoFinal" class="form-label">CTO Final</label>
+                    <input type="text" id="ctoFinal" class="form-control" placeholder="CTO Final">
+                </div>
+                <div class="col-md-4">
+                    <label for="divisor" class="form-label">Divisor</label>
+                    <input type="text" id="divisor" class="form-control" placeholder="Divisor">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <label for="borne" class="form-label">Borne (01-16)</label>
+                    <input type="number" id="borne" class="form-control" placeholder="Borne" min="1" max="16">
+                </div>
+            </div>
+            <div class="buttons">
+                <button type="button" id="reasignarBtn" class="btn btn-primary me-2">Reasignar</button>
+                <button type="button" id="limpiarBtn" class="btn btn-secondary me-2">Limpiar Campos</button>
+                <button type="button" id="guardarBtn" class="btn btn-success">Guardar</button>
+            </div>
+        </form>
+        <div id="resultado" class="mt-4">
+            <!-- Aquí se mostrarán los resultados de reasignar -->
+        </div>
+    </div>
+
+    <script>
+        // Función para formatear la hora (sin segundos)
+        function obtenerHoraSinSegundos(fecha) {
+            return fecha.toTimeString().split(':').slice(0, 2).join(':');
+        }
+
+        document.getElementById('reasignarBtn').addEventListener('click', function() {
+            const orden = document.getElementById('orden').value;
+            const lineid = document.getElementById('lineid').value;
+            const ctoFinal = document.getElementById('ctoFinal').value;
+            const divisor = document.getElementById('divisor').value;
+            const borne = document.getElementById('borne').value;
+
+            const resultadoTexto = `Orden: ${orden}\nLine ID: ${lineid}\nCTO: ${ctoFinal}\nDivisor: ${divisor}\nBorne: ${borne}`;
+
+            // Mostrar el resultado en la página, limpiando antes
+            const resultadoDiv = document.getElementById('resultado');
+            resultadoDiv.textContent = resultadoTexto;
+
+            // Copiar al portapapeles
+            navigator.clipboard.writeText(resultadoTexto).then(() => {
+            }).catch(err => {
+                console.error('Error al copiar al portapapeles:', err);
+            });
+        });
+
+        document.getElementById('limpiarBtn').addEventListener('click', function() {
+            document.getElementById('orden').value = '';
+            document.getElementById('lineid').value = '';
+            document.getElementById('ctoInicial').value = '';
+            document.getElementById('ctoFinal').value = '';
+            document.getElementById('divisor').value = '';
+            document.getElementById('borne').value = '';
+        });
+
+        document.getElementById('guardarBtn').addEventListener('click', function() {
+            const gestor = document.getElementById('gestor').value;
+            const orden = document.getElementById('orden').value;
+            const lineid = document.getElementById('lineid').value;
+            const ctoInicial = document.getElementById('ctoInicial').value;
+            const ctoFinal = document.getElementById('ctoFinal').value;
+
+            const fechaHoy = new Date().toLocaleDateString();
+            const horaCierre = obtenerHoraSinSegundos(new Date());
+            const horaIngreso = ''; // Dejar en blanco como solicitado
+
+            const textoGuardar = `${orden}\t${lineid}\t${ctoInicial}\t${ctoFinal}\t${fechaHoy}\t${horaIngreso}\t${fechaHoy}\t${horaCierre}\t${gestor}`;
+
+            // Copiar al portapapeles
+            navigator.clipboard.writeText(textoGuardar).then(() => {
+            }).catch(err => {
+                console.error('Error al copiar al portapapeles:', err);
+            });
+        });
+    </script>
+</body>
+</html>
+
